@@ -14,26 +14,24 @@ class CargaLevantada {
   final double pesoKg;
   final int repeticiones;
 
-  factory CargaLevantada.desdeJson(Map<String, dynamic> json) {
-    return CargaLevantada(
+  factory CargaLevantada.fromJson(Map<String, dynamic> json) => CargaLevantada(
       ejercicio: leerTexto(json, 'ejercicio'),
       pesoKg: leerDecimal(json, 'pesoKg'),
       repeticiones: leerEntero(json, 'repeticiones'),
     );
-  }
 
-  Map<String, dynamic> aJson() => {
-        'ejercicio': ejercicio,
-        'pesoKg': pesoKg,
-        'repeticiones': repeticiones,
-      };
-
-  @override
+  Map<String, dynamic> toJson() => {
+      'ejercicio': ejercicio,
+      'pesoKg': pesoKg,
+      'repeticiones': repeticiones,
+    };
+ @override
   bool operator ==(Object other) =>
-      other is CargaLevantada &&
-      other.ejercicio == ejercicio &&
-      other.pesoKg == pesoKg &&
-      other.repeticiones == repeticiones;
+    identical(this, other) ||
+    other is CargaLevantada &&
+        other.ejercicio == ejercicio &&
+        other.pesoKg == pesoKg &&
+        other.repeticiones == repeticiones;
 
   @override
   int get hashCode => Object.hash(ejercicio, pesoKg, repeticiones);
@@ -41,4 +39,8 @@ class CargaLevantada {
   @override
   String toString() =>
       'CargaLevantada($ejercicio: ${pesoKg}kg × $repeticiones)';
+
+  
+
+
 }

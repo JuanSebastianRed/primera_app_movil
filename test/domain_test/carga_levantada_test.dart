@@ -11,7 +11,7 @@ void main() {
     });
 
     test('se lee correctamente desde JSON, incluyendo peso entero disfrazado', () {
-      final carga = CargaLevantada.desdeJson({
+      final carga = CargaLevantada.fromJson({
         'ejercicio': 'Fondos en paralelas',
         'pesoKg': 0, // int, no double — el caso que rompe un cast directo
         'repeticiones': 12,
