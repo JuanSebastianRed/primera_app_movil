@@ -1,0 +1,76 @@
+/// Lectura defensiva de mapas JSON.
+///
+/// La frontera con el mundo exterior es el sitio donde el compilador deja de
+/// ayudar: `jsonDecode` devuelve `dynamic`. Estas funciones devuelven la
+/// confianza al otro lado, y cuando no pueden, dicen exactamente por qué.
+
+/// Un campo del JSON no tiene la forma que el modelo espera.
+class CampoInvalido implements Exception {
+  const CampoInvalido(this.campo, this.motivo, this.valor);
+
+  final String campo;
+  final String motivo;
+  final Object? valor;
+
+  @override
+  String toString() => 'CampoInvalido: \'$campo\' $motivo (llegó: $valor)';
+}
+
+String leerTexto(Map<String, dynamic> json, String campo) {
+  final valor = json[campo];
+  if (valor is String && valor.trim().isNotEmpty) return valor;
+  throw CampoInvalido(campo, 'debe ser un texto no vacío', valor);
+}
+
+String? leerTextoOpcional(Map<String, dynamic> json, String campo) {
+  final valor = json[campo];
+  if (valor == null) return null;
+  if (valor is String) return valor;
+  throw CampoInvalido(campo, 'debe ser un texto o venir ausente', valor);
+}
+
+double leerDecimal(Map<String, dynamic> json, String campo) {
+  final valor = json[campo];
+  // En JSON, 10 y 10.0 son el mismo número. En Dart, int y double NO lo son:
+  // `valor as double` revienta con 10. Por eso se pasa por num.
+  if (valor is num) return valor.toDouble();
+  throw CampoInvalido(campo, 'debe ser un número', valor);
+}
+
+int leerEntero(Map<String, dynamic> json, String campo) {
+  final valor = json[campo];
+  if (valor is int) return valor;
+  if (valor is num && valor == valor.roundToDouble()) return valor.toInt();
+  throw CampoInvalido(campo, 'debe ser un número entero', valor);
+}
+
+DateTime leerFecha(Map<String, dynamic> json, String campo) {
+  final valor = json[campo];
+  if (valor is! String) {
+    throw CampoInvalido(campo, 'debe ser una fecha ISO 8601 en texto', valor);
+  }
+  final fecha = DateTime.tryParse(valor);
+  if (fecha == null) {
+    throw CampoInvalido(campo, 'no es una fecha ISO 8601', valor);
+  }
+  return fecha.toUtc();
+}
+
+Map<String, dynamic> leerMapa(Map<String, dynamic> json, String campo) {
+  final valor = json[campo];
+  if (valor is Map<String, dynamic>) return valor;
+  throw CampoInvalido(campo, 'debe ser un objeto', valor);
+}
+
+List<Map<String, dynamic>> leerMapas(Map<String, dynamic> json, String campo) {
+  final valor = json[campo];
+  if (valor == null) return const <Map<String, dynamic>>[];
+  if (valor is! List) throw CampoInvalido(campo, 'debe ser una lista', valor);
+  return List<Map<String, dynamic>>.unmodifiable(
+    valor.map(
+      (e) => e is Map<String, dynamic>
+          ? e
+          : throw CampoInvalido(campo, 'todos sus elementos deben ser objetos', e),
+    ),
+  );
+}
