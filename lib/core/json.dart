@@ -70,7 +70,11 @@ List<Map<String, dynamic>> leerMapas(Map<String, dynamic> json, String campo) {
     valor.map(
       (e) => e is Map<String, dynamic>
           ? e
-          : throw CampoInvalido(campo, 'todos sus elementos deben ser objetos', e),
+          : throw CampoInvalido(
+              campo,
+              'todos sus elementos deben ser objetos',
+              e,
+            ),
     ),
   );
 }

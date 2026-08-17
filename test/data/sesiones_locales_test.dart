@@ -47,10 +47,13 @@ void main() {
     expect(pendientes.single.id, 'sesion-002');
   });
 
-  test('el asset declarado en pubspec existe y el modelo lo entiende', () async {
-    // Esta SÍ toca el bundle: es la única que caza "olvidé el pubspec".
-    TestWidgetsFlutterBinding.ensureInitialized();
-    final repo = SesionesLocales(lector: rootBundle.loadString);
-    expect((await repo.obtenerTodas()).length, greaterThanOrEqualTo(3));
-  });
+  test(
+    'el asset declarado en pubspec existe y el modelo lo entiende',
+    () async {
+      // Esta SÍ toca el bundle: es la única que caza "olvidé el pubspec".
+      TestWidgetsFlutterBinding.ensureInitialized();
+      final repo = SesionesLocales(lector: rootBundle.loadString);
+      expect((await repo.obtenerTodas()).length, greaterThanOrEqualTo(3));
+    },
+  );
 }

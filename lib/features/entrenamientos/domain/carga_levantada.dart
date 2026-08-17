@@ -7,31 +7,31 @@ class CargaLevantada {
     required this.ejercicio,
     required this.pesoKg,
     required this.repeticiones,
-  })  : assert(pesoKg >= 0, 'pesoKg no puede ser negativo'),
-        assert(repeticiones > 0, 'repeticiones debe ser mayor a 0');
+  }) : assert(pesoKg >= 0, 'pesoKg no puede ser negativo'),
+       assert(repeticiones > 0, 'repeticiones debe ser mayor a 0');
 
   final String ejercicio;
   final double pesoKg;
   final int repeticiones;
 
   factory CargaLevantada.fromJson(Map<String, dynamic> json) => CargaLevantada(
-      ejercicio: leerTexto(json, 'ejercicio'),
-      pesoKg: leerDecimal(json, 'pesoKg'),
-      repeticiones: leerEntero(json, 'repeticiones'),
-    );
+    ejercicio: leerTexto(json, 'ejercicio'),
+    pesoKg: leerDecimal(json, 'pesoKg'),
+    repeticiones: leerEntero(json, 'repeticiones'),
+  );
 
   Map<String, dynamic> toJson() => {
-      'ejercicio': ejercicio,
-      'pesoKg': pesoKg,
-      'repeticiones': repeticiones,
-    };
- @override
+    'ejercicio': ejercicio,
+    'pesoKg': pesoKg,
+    'repeticiones': repeticiones,
+  };
+  @override
   bool operator ==(Object other) =>
-    identical(this, other) ||
-    other is CargaLevantada &&
-        other.ejercicio == ejercicio &&
-        other.pesoKg == pesoKg &&
-        other.repeticiones == repeticiones;
+      identical(this, other) ||
+      other is CargaLevantada &&
+          other.ejercicio == ejercicio &&
+          other.pesoKg == pesoKg &&
+          other.repeticiones == repeticiones;
 
   @override
   int get hashCode => Object.hash(ejercicio, pesoKg, repeticiones);
@@ -39,8 +39,4 @@ class CargaLevantada {
   @override
   String toString() =>
       'CargaLevantada($ejercicio: ${pesoKg}kg × $repeticiones)';
-
-  
-
-
 }

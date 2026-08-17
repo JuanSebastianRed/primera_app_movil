@@ -8,14 +8,13 @@ import 'package:gymsaas_movil/features/entrenamientos/domain/sesion_entrenamient
 SesionEntrenamiento ejemplo({
   EstadoSesion? estado,
   List<CargaLevantada>? cargas,
-}) =>
-    SesionEntrenamiento(
-      id: 'sesion-001',
-      rutina: 'Push Day',
-      fechaPlaneada: DateTime.utc(2026, 8, 10, 14),
-      estado: estado ?? const Planeada(),
-      cargas: cargas ?? const <CargaLevantada>[],
-    );
+}) => SesionEntrenamiento(
+  id: 'sesion-001',
+  rutina: 'Push Day',
+  fechaPlaneada: DateTime.utc(2026, 8, 10, 14),
+  estado: estado ?? const Planeada(),
+  cargas: cargas ?? const <CargaLevantada>[],
+);
 
 void main() {
   group('serializacion', () {
@@ -30,8 +29,9 @@ void main() {
       // Pasa por TEXTO, no solo por Map: así también se prueba que las
       // fechas y las listas sobreviven a jsonEncode.
       final texto = jsonEncode(original.toJson());
-      final vuelta =
-          SesionEntrenamiento.fromJson(jsonDecode(texto) as Map<String, dynamic>);
+      final vuelta = SesionEntrenamiento.fromJson(
+        jsonDecode(texto) as Map<String, dynamic>,
+      );
 
       expect(vuelta, equals(original));
     });
@@ -51,7 +51,10 @@ void main() {
 
     test('una fecha que no es ISO 8601 se rechaza', () {
       final json = ejemplo().toJson()..['fechaPlaneada'] = '10 de agosto';
-      expect(() => SesionEntrenamiento.fromJson(json), throwsA(isA<CampoInvalido>()));
+      expect(
+        () => SesionEntrenamiento.fromJson(json),
+        throwsA(isA<CampoInvalido>()),
+      );
     });
 
     test('la hora se conserva en UTC y no se corre cinco horas', () {
@@ -73,12 +76,28 @@ void main() {
 
     test('dos sesiones con cargas distintas NO son iguales', () {
       expect(
-        ejemplo(cargas: const [
-          CargaLevantada(ejercicio: 'Sentadilla', pesoKg: 80, repeticiones: 5),
-        ]),
-        isNot(equals(ejemplo(cargas: const [
-          CargaLevantada(ejercicio: 'Peso muerto', pesoKg: 100, repeticiones: 5),
-        ]))),
+        ejemplo(
+          cargas: const [
+            CargaLevantada(
+              ejercicio: 'Sentadilla',
+              pesoKg: 80,
+              repeticiones: 5,
+            ),
+          ],
+        ),
+        isNot(
+          equals(
+            ejemplo(
+              cargas: const [
+                CargaLevantada(
+                  ejercicio: 'Peso muerto',
+                  pesoKg: 100,
+                  repeticiones: 5,
+                ),
+              ],
+            ),
+          ),
+        ),
       );
     });
 
@@ -98,9 +117,11 @@ void main() {
 
     test('una sesión con cargas registradas sí tiene registro', () {
       expect(
-        ejemplo(cargas: const [
-          CargaLevantada(ejercicio: 'Curl', pesoKg: 15, repeticiones: 12),
-        ]).tieneRegistroDeCargas,
+        ejemplo(
+          cargas: const [
+            CargaLevantada(ejercicio: 'Curl', pesoKg: 15, repeticiones: 12),
+          ],
+        ).tieneRegistroDeCargas,
         isTrue,
       );
     });

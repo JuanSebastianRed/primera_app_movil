@@ -15,9 +15,9 @@ sealed class EstadoSesion {
       'planeada' => const Planeada(),
       'en_curso' => EnCurso(leerFecha(json, 'inicioEn')),
       'completada' => Completada(
-          leerFecha(json, 'finEn'),
-          leerEntero(json, 'duracionMinutos'),
-        ),
+        leerFecha(json, 'finEn'),
+        leerEntero(json, 'duracionMinutos'),
+      ),
       'saltada' => Saltada(leerTexto(json, 'motivo')),
       _ => throw CampoInvalido('estado.tipo', 'no es un estado conocido', tipo),
     };
@@ -26,18 +26,18 @@ sealed class EstadoSesion {
   /// Y el único sitio donde vuelve a ser texto. Simétrico a fromJson: si
   /// añades un estado arriba y olvidas añadirlo aquí, esto no compila.
   Map<String, dynamic> toJson() => switch (this) {
-        Planeada() => {'tipo': 'planeada'},
-        EnCurso(:final inicioEn) => {
-            'tipo': 'en_curso',
-            'inicioEn': inicioEn.toIso8601String(),
-          },
-        Completada(:final finEn, :final duracionMinutos) => {
-            'tipo': 'completada',
-            'finEn': finEn.toIso8601String(),
-            'duracionMinutos': duracionMinutos,
-          },
-        Saltada(:final motivo) => {'tipo': 'saltada', 'motivo': motivo},
-      };
+    Planeada() => {'tipo': 'planeada'},
+    EnCurso(:final inicioEn) => {
+      'tipo': 'en_curso',
+      'inicioEn': inicioEn.toIso8601String(),
+    },
+    Completada(:final finEn, :final duracionMinutos) => {
+      'tipo': 'completada',
+      'finEn': finEn.toIso8601String(),
+      'duracionMinutos': duracionMinutos,
+    },
+    Saltada(:final motivo) => {'tipo': 'saltada', 'motivo': motivo},
+  };
 }
 
 final class Planeada extends EstadoSesion {
@@ -67,7 +67,7 @@ final class EnCurso extends EstadoSesion {
 
 final class Completada extends EstadoSesion {
   const Completada(this.finEn, this.duracionMinutos)
-      : assert(duracionMinutos > 0, 'duracionMinutos debe ser mayor a 0');
+    : assert(duracionMinutos > 0, 'duracionMinutos debe ser mayor a 0');
 
   final DateTime finEn;
   final int duracionMinutos;
@@ -99,4 +99,3 @@ final class Saltada extends EstadoSesion {
   @override
   String toString() => 'Saltada($motivo)';
 }
-

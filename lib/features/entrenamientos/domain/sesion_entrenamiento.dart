@@ -22,9 +22,10 @@ class SesionEntrenamiento {
         rutina: leerTexto(json, 'rutina'),
         fechaPlaneada: leerFecha(json, 'fechaPlaneada'),
         estado: EstadoSesion.fromJson(leerMapa(json, 'estado')),
-        cargas: leerMapas(json, 'cargas')
-            .map(CargaLevantada.fromJson)
-            .toList(growable: false),
+        cargas: leerMapas(
+          json,
+          'cargas',
+        ).map(CargaLevantada.fromJson).toList(growable: false),
       );
 
   final String id;
@@ -34,12 +35,12 @@ class SesionEntrenamiento {
   final List<CargaLevantada> cargas;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'rutina': rutina,
-        'fechaPlaneada': fechaPlaneada.toUtc().toIso8601String(),
-        'estado': estado.toJson(),
-        'cargas': cargas.map((c) => c.toJson()).toList(growable: false),
-      };
+    'id': id,
+    'rutina': rutina,
+    'fechaPlaneada': fechaPlaneada.toUtc().toIso8601String(),
+    'estado': estado.toJson(),
+    'cargas': cargas.map((c) => c.toJson()).toList(growable: false),
+  };
 
   // --- Reglas de negocio ---------------------------------------------
   // Viven aquí, no en el widget. Un widget no se puede probar en 3 ms.
@@ -61,14 +62,13 @@ class SesionEntrenamiento {
     DateTime? fechaPlaneada,
     EstadoSesion? estado,
     List<CargaLevantada>? cargas,
-  }) =>
-      SesionEntrenamiento(
-        id: id, // la identidad NO se copia con cambios
-        rutina: rutina ?? this.rutina,
-        fechaPlaneada: fechaPlaneada ?? this.fechaPlaneada,
-        estado: estado ?? this.estado,
-        cargas: cargas ?? this.cargas,
-      );
+  }) => SesionEntrenamiento(
+    id: id, // la identidad NO se copia con cambios
+    rutina: rutina ?? this.rutina,
+    fechaPlaneada: fechaPlaneada ?? this.fechaPlaneada,
+    estado: estado ?? this.estado,
+    cargas: cargas ?? this.cargas,
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -82,12 +82,12 @@ class SesionEntrenamiento {
 
   @override
   int get hashCode => Object.hash(
-        id,
-        rutina,
-        fechaPlaneada,
-        estado,
-        Object.hashAll(cargas), // NO Object.hash(cargas): eso hashea
-      );          // la referencia, no el contenido
+    id,
+    rutina,
+    fechaPlaneada,
+    estado,
+    Object.hashAll(cargas), // NO Object.hash(cargas): eso hashea
+  ); // la referencia, no el contenido
 
   @override
   String toString() => 'SesionEntrenamiento($id, $rutina, $estado)';
