@@ -4,6 +4,7 @@
 /// ayudar: `jsonDecode` devuelve `dynamic`. Estas funciones devuelven la
 /// confianza al otro lado, y cuando no pueden, dicen exactamente por qué.
 library;
+
 /// Un campo del JSON no tiene la forma que el modelo espera.
 class CampoInvalido implements Exception {
   const CampoInvalido(this.campo, this.motivo, this.valor);
